@@ -11,6 +11,15 @@ data = json.load(json_db)   # Загружаем данные из файла
 messages_list = data['messages_list']   # Берем сообщение из структуры и кладем в переменную
 
 
+# Функция сохранения сообщения в файл.
+def save_messages():
+    # Создаем структуру
+    data = {
+        "messages_list": messages_list,
+    }
+    json_db = open(db_file, "w")
+    json.dump(data, json_db)    # Записываем данные в файл.
+
 # Функция, которая умеет выводить одно сообщение
 def print_message(message):
     print(f"[{message['sender']}]: {message['text']} / {message['date']}")
@@ -54,6 +63,7 @@ def send_message():
     name = request.args["name"]
     text = request.args["text"]
     add_message(name, text)
+    save_messages()     # Сохраняем  сообщения в файл
     return "Ok"
 
 
@@ -63,4 +73,4 @@ def form():
     return render_template("form.html")
 
 
-app.run()
+app.run(host='0.0.0.0', port=80)
